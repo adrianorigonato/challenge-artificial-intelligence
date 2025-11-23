@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>RAG Learning Web</title>
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen">
+  <div class="max-w-5xl mx-auto py-8 px-4 space-y-6">
+    <header class="space-y-4">
+      <h1 class="text-3xl font-bold text-slate-800">
+        RAG Learning Web
+      </h1>
+
+      <!-- MENU SUPERIOR (TABS) -->
+      <nav class="flex flex-wrap gap-2 text-sm">
+        <button
+          id="tab-chat"
+          data-page="chat"
+          class="px-4 py-2 rounded-full font-medium bg-slate-800 text-white shadow-sm"
+        >
+          Chat
+        </button>
+        <button
+          id="tab-study"
+          data-page="study"
+          class="px-4 py-2 rounded-full font-medium bg-white text-slate-700 border border-slate-300 hover:bg-slate-50"
+        >
+          Estudar
+        </button>
+        <button
+          id="tab-ingest"
+          data-page="ingest"
+          class="px-4 py-2 rounded-full font-medium bg-white text-slate-700 border border-slate-300 hover:bg-slate-50"
+        >
+          Ingestão de arquivos
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- ==========================
+           1. CHAT (TELA INICIAL)
+           ========================== -->
+      <section id="section-chat" class="space-y-4">
+        <div class="bg-white rounded-xl shadow p-4 space-y-4">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div>
+              <h2 class="text-xl font-semibold">Chat</h2>
+              <p class="text-xs text-slate-500" id="conversation-id-label">
+                Nenhuma conversa iniciada. Envie uma mensagem para começar.
+              </p>
+            </div>
+
+            <!-- Formato preferido fica na tela de Chat -->
+            <div class="flex flex-wrap items-center gap-2">
+              <label for="format-select" class="text-sm text-slate-700">
+                Formato preferido para estudar:
+              </label>
+              <select
+                id="format-select"
+                class="border rounded-lg px-2 py-1 text-sm"
+              >
+                <option value="">Automático</option>
+                <option value="video">Vídeo</option>
+                <option value="audio">Áudio</option>
+                <option value="texto">Texto</option>
+              </select>
+              <span
+                id="format-current-label"
+                class="text-[11px] text-slate-500"
+              >
+                (usando: automático)
+              </span>
+            </div>
+          </div>
+
+          <div
+            id="chat-box"
+            class="border border-slate-200 rounded-lg h-72 overflow-y-auto p-3 bg-slate-50 text-sm"
+          ></div>
+
+          <form id="chat-form" class="flex gap-2">
+            <input
+              id="chat-input"
+              type="text"
+              placeholder="Digite sua pergunta..."
+              class="flex-1 border rounded-lg px-3 py-2 text-sm"
+            />
+            <button
+              type="submit"
+              class="px-4 py-2 rounded-lg text-sm font-medium bg-slate-800 text-white hover:bg-slate-700"
+            >
+              Enviar
+            </button>
+          </form>
+          <p id="chat-status" class="text-xs text-slate-500"></p>
+        </div>
+      </section>
+
+      <!-- ==========================
+           2. ESTUDAR (APENAS CONTEÚDO GERADO)
+           ========================== -->
+      <section id="section-study" class="space-y-4 hidden">
+        <div class="bg-white rounded-xl shadow p-4">
+          <h2 class="text-xl font-semibold mb-4">Estudar</h2>
+
+          <!-- SOMENTE OS CONTEÚDOS GERADOS APARECEM AQUI -->
+          <div id="contents-box" class="grid md:grid-cols-2 gap-4"></div>
+        </div>
+      </section>
+
+      <!-- ==========================
+           3. INGESTÃO DE ARQUIVOS
+           ========================== -->
+      <section id="section-ingest" class="space-y-4 hidden">
+        <div class="bg-white rounded-xl shadow p-4">
+          <h2 class="text-xl font-semibold mb-3">Ingestão de arquivos</h2>
+          <p class="text-sm text-slate-600 mb-4">
+            Envie PDFs, áudios, vídeos ou imagens para alimentar a base de conhecimento usada no chat e na geração de conteúdos.
+          </p>
+          <form id="ingest-form" class="flex flex-col gap-3 md:flex-row md:items-center">
+            <input
+              id="file-input"
+              name="file"
+              type="file"
+              class="block w-full text-sm text-slate-700"
+              required
+            />
+            <button
+              type="submit"
+              class="px-4 py-2 rounded-lg text-sm font-medium bg-slate-800 text-white hover:bg-slate-700"
+            >
+              Enviar
+            </button>
+          </form>
+          <p id="ingest-status" class="text-sm text-slate-600 mt-3"></p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- JS principal da aplicação -->
+  <script src="/main.js"></script>
+</body>
+</html>
