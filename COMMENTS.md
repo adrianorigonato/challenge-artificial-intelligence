@@ -1,7 +1,7 @@
-## Acesse: https://challenge-ozlg.onrender.com/ para testar. 
-(Obs.: aguarde de 30 a 80 segundos até terminar de carregar o deploy)
+**Acesse: https://challenge-ozlg.onrender.com/ para testar. (Obs.: aguarde de 30 a 80 segundos até carregar o deploy)**
 
-##Decisão da arquitetura utilizada A arquitetura foi definida para
+# Decisão da arquitetura utilizada
+A arquitetura foi definida para
 manter, principalmente, o foco no objetivo pedagógico da aplicação, sem
 abrir mão de boa modularidade e escalabilidade. A ideia foi organizar os
 fluxos em uma sequência lógica e funcional, de modo que cada parte possa
@@ -13,23 +13,31 @@ conversa, análise e geração de conteúdo) garante um pipeline claro e de
 fácil manutenção, facilitando testes, a substituição de componentes
 (modelos e servidores de IA, formatos e tipos de arquivos etc) e
 evolução incremental.
+###
 
-##Lista de bibliotecas de terceiros utilizadas 
-###Backend Python / FastAPI
-Psycopg2 PostgreSQL pgvector OpenRouter API (embeddings) Groq API (chat,
-áudio, visão) pydantic pdfplumber.
+# Lista de bibliotecas de terceiros utilizadas 
+### Backend Python / FastAPI
+- Psycopg2
+- PostgreSQL 
+- pgvector 
+- OpenRouter API (embeddings) 
+- Groq API (chat, áudio, visão) 
+- pydantic 
+- pdfplumber.
 
-###Frontend
- HTML5 Tailwind CSS (via CDN) JavaScript nativo
+### Frontend
+- HTML5 
+- Tailwind CSS (via CDN) 
+- JavaScript nativo
 
-###Infra / Integração
-Embeddings vetoriais 
-Chunking inteligente de textos
-Ingestão multimídia (PDF, áudio, vídeo, imagem, texto, JSON) Modelos de
-Geração de conteúdo didático
+### Infra / Integração
+- Embeddings vetoriais 
+- Chunking inteligente de textos
+- Ingestão multimídia (PDF, áudio, vídeo, imagem, texto, JSON) Modelos de
+- Geração de conteúdo didático
 
-##O que você melhoraria se tivesse mais tempo 1. Aprimoramento dos
-1. Prompts e Experiência do Aluno
+# O que você melhoraria se tivesse mais tempo 
+1. Aprimoramento dos Prompts e Experiência do Aluno
 Refinar os prompts utilizados pelo sistema para proporcionar uma
 experiência mais natural, dinâmica e engajante. O objetivo é reduzir a
 taxa de abandono, garantindo que o aluno se sinta orientado, motivado e
@@ -73,5 +81,5 @@ Integrar serviços externos especializados para geração de conteúdo
 multimídia, permitindo criar vídeos e áudios educacionais de alta
 qualidade.
 
-##Quais requisitos obrigatórios que não foram entregues geração de
+# Quais requisitos obrigatórios que não foram entregues geração de
 Geração de conteúdos em formato de vídeo e áudio. Foi possível apenas criar os prompts de geração dos conteúdos nesses formatos.
