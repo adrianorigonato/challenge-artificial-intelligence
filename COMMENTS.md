@@ -1,6 +1,6 @@
 **Acesse: https://challenge-ozlg.onrender.com/ para testar. (Obs.: aguarde de 30 a 80 segundos até carregar o deploy)**
 
-# Decisão da arquitetura utilizada
+## Decisão da arquitetura utilizada
 A arquitetura foi definida para
 manter, principalmente, o foco no objetivo pedagógico da aplicação, sem
 abrir mão de boa modularidade e escalabilidade. A ideia foi organizar os
@@ -15,7 +15,7 @@ fácil manutenção, facilitando testes, a substituição de componentes
 evolução incremental.
 ###
 
-# Lista de bibliotecas de terceiros utilizadas 
+## Lista de bibliotecas de terceiros utilizadas 
 ### Backend Python / FastAPI
 - Psycopg2
 - PostgreSQL 
@@ -36,7 +36,7 @@ evolução incremental.
 - Ingestão multimídia (PDF, áudio, vídeo, imagem, texto, JSON) Modelos de
 - Geração de conteúdo didático
 
-# O que você melhoraria se tivesse mais tempo 
+## O que você melhoraria se tivesse mais tempo 
 1. Aprimoramento dos Prompts e Experiência do Aluno
 Refinar os prompts utilizados pelo sistema para proporcionar uma
 experiência mais natural, dinâmica e engajante. O objetivo é reduzir a
@@ -81,11 +81,11 @@ Integrar serviços externos especializados para geração de conteúdo
 multimídia, permitindo criar vídeos e áudios educacionais de alta
 qualidade.
 
-# Quais requisitos obrigatórios que não foram entregues geração de
+## Quais requisitos obrigatórios que não foram entregues
 Geração de conteúdos em formato de vídeo e áudio. Foi possível apenas criar os prompts de geração dos conteúdos nesses formatos.
-
-
-**Estrutura do Projeto**
+#
+#
+## Estrutura do Projeto
 ```
 /
 ├── app.py                     # App FastAPI principal
