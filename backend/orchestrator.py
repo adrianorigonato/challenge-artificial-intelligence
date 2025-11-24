@@ -1,4 +1,5 @@
 import os
+import json
 from typing import Any, Dict, List, Optional
 
 from psycopg2.extensions import connection as PgConnection
@@ -19,17 +20,27 @@ from .chunking import (
     insert_documents,
     is_already_ingested,
 )
-from .conversation import chat_step, create_conversation, get_conversation_history
-from .conversation_analysis import analyze_conversation_with_groq, save_profile_information
+from .conversation import (
+    chat_step,
+    create_conversation,
+    get_conversation_history,
+)
+from .conversation_analysis import (
+    analyze_conversation_with_groq,
+    save_profile_information,
+)
 from .content_generation import generate_personalized_contents
 
 
+# ==========================
 # INGESTÃO DE ARQUIVOS
+# ==========================
 def ingest_file(
     conn: PgConnection,
     file_path: str,
     title: Optional[str] = None,
 ) -> Dict[str, Any]:
+
     init_db(conn)
 
     ext = os.path.splitext(file_path)[1].lower()
@@ -59,6 +70,59 @@ def ingest_file(
             }
 
         full_text = extract_text_from_pdf(file_path)
+
+    # ==========================
+    # TXT
+    # ==========================
+    elif ext == ".txt":
+        doc_type = "text"
+        media_metadata = {
+            "source": base_name,
+            "title": title,
+            "type": "text",
+            "original_format": "txt",
+        }
+
+        if is_already_ingested(conn, base_name, doc_type):
+            return {
+                "skipped": True,
+                "reason": "already_ingested",
+                "inserted_chunks": 0,
+                "metadata": media_metadata,
+            }
+
+        with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+            full_text = f.read()
+
+    # ==========================
+    # JSON
+    # ==========================
+    elif ext == ".json":
+        doc_type = "json"
+        media_metadata = {
+            "source": base_name,
+            "title": title,
+            "type": "json",
+            "original_format": "json",
+        }
+
+        if is_already_ingested(conn, base_name, doc_type):
+            return {
+                "skipped": True,
+                "reason": "already_ingested",
+                "inserted_chunks": 0,
+                "metadata": media_metadata,
+            }
+
+        with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+            try:
+                data = json.load(f)
+                # Deixa o JSON “bonitinho” como texto para ser embeddado
+                full_text = json.dumps(data, ensure_ascii=False, indent=2)
+            except json.JSONDecodeError:
+                # Se não for um JSON válido, trata como texto puro
+                f.seek(0)
+                full_text = f.read()
 
     # ==========================
     # ÁUDIO
@@ -157,7 +221,12 @@ def ingest_file(
     # EMBEDDINGS + INSERT
     # ==========================
     embeddings = embed_texts(chunks)
-    inserted = insert_documents(conn, chunks, embeddings, base_metadata=media_metadata)
+    inserted = insert_documents(
+        conn,
+        chunks,
+        embeddings,
+        base_metadata=media_metadata,
+    )
 
     return {
         "skipped": False,
@@ -171,10 +240,8 @@ def ingest_file(
 # CONVERSATION
 # ==========================
 def start_conversation(conn: PgConnection) -> int:
-    """
-    Cria um novo registro de conversa e retorna o id.
-    A lógica de criação (tabela, campos) fica em conversation.create_conversation.
-    """
+    
+    init_db(conn)
     conversation_id = create_conversation(conn)
     return conversation_id
 
@@ -185,15 +252,8 @@ def handle_chat_message(
     message: str,
     top_k: int = 5,
 ) -> Dict[str, Any]:
-    """
-    Um passo de chat:
-      - Se não houver conversation_id, cria uma nova conversa.
-      - Faz busca vetorial, chama LLM da Groq, atualiza histórico no banco
-        (tudo isso dentro de conversation.chat_step).
-      - Retorna dict no formato esperado pelo ChatResponse (app.py).
-    """
-    if conversation_id is None:
-        conversation_id = create_conversation(conn)
+    
+    init_db(conn)
 
     result = chat_step(
         conn=conn,
@@ -212,11 +272,14 @@ def analyze_and_generate(
     conversation_id: int,
     preferred_format: Optional[str] = None,
 ) -> Dict[str, Any]:
+    
+    init_db(conn)
+
     history = get_conversation_history(conn, conversation_id)
     if not history:
         raise ValueError("Nenhum histórico encontrado para esta conversa.")
 
-    # 2) Análise pedagógica
+    # 2) Análise pedagógica (Groq)
     analysis = analyze_conversation_with_groq(history)
 
     # 3) Salvar análise em profile_information
@@ -225,6 +288,7 @@ def analyze_and_generate(
         conversation_id=conversation_id,
         conversation_history=history,
         analysis=analysis,
+        preferred_format=preferred_format,
     )
 
     # 4) Geração de conteúdos personalizados
